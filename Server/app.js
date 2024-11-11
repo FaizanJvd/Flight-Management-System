@@ -11,7 +11,7 @@ const app = express();
 app.use(express.json());
 
 connectToMongo();
-
+require('./tasks/flightTasks');
 app.use('/api/flights', flightRoutes);
 app.use('/api/users', userRoutes);
 

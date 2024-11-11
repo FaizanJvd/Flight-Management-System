@@ -27,7 +27,7 @@ const getFlights = async (filters = {}, search = '', page = 1, limit = 10) => {
     const flights = await Flight.find(query)
       .skip(skip)
       .limit(limit)
-      .sort({ scheduledDepartureTime: 1 });
+      .sort({ updatedAt: -1 });
 
     const totalFlights = await Flight.countDocuments(query);
 

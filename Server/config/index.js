@@ -10,6 +10,10 @@ module.exports = {
     },
     jwt: {
         secret: process.env.JWT_SECRET || "flightwillnotdelay",
-      },
+    },
+    tasks: {
+        createFlightInterval:process.env.CREATE_FLIGHT_TASK_INTERVAL || 10000,
+        updateFlightInterval:process.env.UPDATE_FLIGHT_TASK_INTERVAL || 20000
+    }
     
 };
