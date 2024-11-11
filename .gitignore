@@ -1,0 +1,7 @@
+/Devops/kafka-data
+/Devops/mongo-config
+/Devops/mongo-data
+/Devops/zookeeper-data
+
+/Server/node_modules
+/Server/.env
