@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectItem, SelectTrigger, SelectContent } from "@/components/ui/select";
@@ -9,7 +9,6 @@ import { getFlights } from "@/lib/features/flightSlice";
 import { Flight } from "@/_utils/types";
 import UpdateFlightStatus from "@/components/UpdateFlightStatus";
 import { getRole, removeAccessToken, removeRole } from "@/_utils/helpers/auth";
-import { useCallback } from "react";
 import { useRouter } from "next/navigation";
 const statusOptions = ['Delayed', 'Cancelled', 'In-flight', 'Scheduled/En Route', "All"];
 const airlineOptions = ["PIA", "Emirates", "Qatar Airlines", "Air India", "All"];
@@ -28,31 +27,52 @@ const FlightTable = () => {
   const role = getRole();
   const router = useRouter();
 
-  const getAndSetFlight = useCallback(async () => {
-    const params: any = {
-      page: currentPage,
-      search: searchQuery || undefined,
-      status: status || undefined,
-      airline: airline || undefined,
-      flightType: flightType || undefined,
-      limit,
-    };
-    await dispatch(getFlights(params));
-  }, [currentPage, searchQuery, status, airline, flightType, limit, dispatch]);
+  const currentPageRef = useRef(currentPage);
+  const searchQueryRef = useRef(searchQuery);
+  const statusRef = useRef(status);
+  const airlineRef = useRef(airline);
+  const flightTypeRef = useRef(flightType);
+  const limitRef = useRef(limit);
   
-  // WebSocket setup to use the latest getAndSetFlight callback
+  // Update refs on state changes
+  useEffect(() => {
+    currentPageRef.current = currentPage;
+    searchQueryRef.current = searchQuery;
+    statusRef.current = status;
+    airlineRef.current = airline;
+    flightTypeRef.current = flightType;
+    limitRef.current = limit;
+  }, [currentPage, searchQuery, status, airline, flightType, limit]);
+
+  // WebSocket connection
   useEffect(() => {
     const socket = new WebSocket('ws://localhost:8080');
-  
-    socket.onmessage = (event) => {
-      const message = JSON.parse(event.data);
-      getAndSetFlight();  // Calls with current filter values
+
+    socket.onmessage = () => {
+      getAndSetFlight();
     };
-  
+
     return () => {
       socket.close();
     };
-  }, [getAndSetFlight]);
+  }, []);
+
+  useEffect(() => {
+    getAndSetFlight();
+  }, [currentPage, searchQuery, limit, status, airline, flightType]);
+
+  const getAndSetFlight = async () => {
+    const params = {
+      page: currentPageRef.current,
+      search: searchQueryRef.current,
+      status: statusRef.current,
+      airline: airlineRef.current,
+      flightType: flightTypeRef.current,
+      limit: limitRef.current,
+    };
+    
+    await dispatch(getFlights(params));
+  };
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.toLowerCase();
