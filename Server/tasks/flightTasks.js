@@ -10,7 +10,7 @@ const generateRandomFlight = async () => {
     scheduledDepartureTime: faker.date.future(), 
     status: faker.helpers.arrayElement(['Delayed', 'Cancelled', 'In-flight', 'Scheduled/En Route']), 
     flightType: faker.helpers.arrayElement(['Commercial', 'Military', 'Private']),  
-    airline: faker.company.name() 
+    airline: faker.helpers.arrayElement(["PIA","Emirates","Qatar Airlines","Air India"]),
   };
 
   try {
