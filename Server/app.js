@@ -23,12 +23,12 @@ app.use('/api/flights', flightRoutes);
 app.use('/api/users', userRoutes);
 process.on("SIGTERM", async () => {
   try {
-    logger.warn("SIGTERM: Initiating graceful shutdown...");
+    console.log("SIGTERM: Initiating graceful shutdown...");
 
     await kafkaClient.disconnectProducer();
 
-    logger.warn("SIGTERM: Graceful shutdown completed. Exiting...");
-    process.exit(0); 
+    console.log("SIGTERM: Graceful shutdown completed. Exiting...");
+    process.exit(0);
   } catch (error) {
     logger.error("SIGTERM: Error during graceful shutdown:", error);
     process.exit(1); 
@@ -37,12 +37,12 @@ process.on("SIGTERM", async () => {
 
 process.on("SIGINT", async () => {
   try {
-    logger.warn("SIGINT: Initiating graceful shutdown...");
+    console.warn("SIGINT: Initiating graceful shutdown...");
 
     await kafkaClient.disconnectProducer();
 
 
-    logger.warn("SIGINT: Graceful shutdown completed. Exiting...");
+    console.warn("SIGINT: Graceful shutdown completed. Exiting...");
     process.exit(0);
   } catch (error) {
     logger.error("SIGINT: Error during graceful shutdown:", error);
