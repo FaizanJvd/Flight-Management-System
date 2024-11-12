@@ -1,7 +1,7 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 
 import authReducer from "./features/authSlice";
-import flightReducer from "./features/authSlice";
+import flightReducer from "./features/flightSlice";
 
 const rootReducer = combineReducers({
   auth: authReducer,

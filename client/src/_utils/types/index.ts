@@ -18,7 +18,7 @@ export interface AuthState {
   loading: boolean;
   error: string | null | undefined;
 }
-interface Flight {
+export interface Flight {
   _id: string;
   flightNumber: string;
   origin: string;
