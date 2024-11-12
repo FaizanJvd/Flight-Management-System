@@ -27,11 +27,7 @@ export default function LoginPage() {
 
   const onSubmit = async (data: z.infer<typeof loginSchema>) => {
     dispatch(resetError());
-    let response: any = await dispatch(loginUser(data));
-    if (response.payload?.success) {
-      console.log(response);
-      
-    }
+    await dispatch(loginUser(data));
   };
 
   return (
@@ -98,6 +94,9 @@ export default function LoginPage() {
             </Button>
           </form>
         </Form>
+        <div className="w-full mt-2">
+          {error && <div className="p-4 bg-red-600 text-white rounded-md">{error}</div>}
+        </div>
       </div>
     </div>
   );
