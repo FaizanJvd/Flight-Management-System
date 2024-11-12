@@ -8,8 +8,8 @@ import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { getFlights } from "@/lib/features/flightSlice";
 import { Flight } from "@/_utils/types";
 import UpdateFlightStatus from "@/components/UpdateFlightStatus";
-import { getRole } from "@/_utils/helpers/auth";
-
+import { getRole, removeAccessToken, removeRole } from "@/_utils/helpers/auth";
+import { useRouter } from "next/navigation";
 const statusOptions = ['Delayed', 'Cancelled', 'In-flight', 'Scheduled/En Route', "All"];
 const airlineOptions = ["PIA", "Emirates", "Qatar Airlines", "Air India", "All"];
 const flightTypeOptions = ["Private", "Commercial", "Military", "All"];
@@ -25,10 +25,11 @@ const FlightTable = () => {
   const dispatch = useAppDispatch();
   const { loading, error, flights, pagination } = useAppSelector((state) => state.flight);
   const role = getRole();
+  
   useEffect(() => {
     getAndSetFlight();
   }, [currentPage, searchQuery, limit, status, airline, flightType]);
-
+  const router = useRouter();
   const getAndSetFlight = async () => {
     const params: any = {};
     if (currentPage) params.page = currentPage;
@@ -86,10 +87,17 @@ const FlightTable = () => {
     setIsModalOpen(false);
     setSelectedFlight(null);
   };
-
+const logout = () => {
+  removeAccessToken();
+  removeRole();
+  router.replace("/login");
+}
   return (
     <div className="p-8 space-y-6 bg-gray-100 min-h-screen">
-      <h1 className="text-3xl font-bold text-gray-800 mb-4">Flight Management System</h1>
+      <div className="flex justify-between">
+        <h1 className="text-3xl font-bold text-gray-800 mb-4">Flight Management System</h1>
+        <Button onClick={logout}>Logout</Button>
+      </div>
 
       {/* Search bar */}
       <Input
