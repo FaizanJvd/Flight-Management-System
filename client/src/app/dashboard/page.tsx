@@ -9,6 +9,7 @@ import { getFlights } from "@/lib/features/flightSlice";
 import { Flight } from "@/_utils/types";
 import UpdateFlightStatus from "@/components/UpdateFlightStatus";
 import { getRole, removeAccessToken, removeRole } from "@/_utils/helpers/auth";
+import { useCallback } from "react";
 import { useRouter } from "next/navigation";
 const statusOptions = ['Delayed', 'Cancelled', 'In-flight', 'Scheduled/En Route', "All"];
 const airlineOptions = ["PIA", "Emirates", "Qatar Airlines", "Air India", "All"];
@@ -25,33 +26,33 @@ const FlightTable = () => {
   const dispatch = useAppDispatch();
   const { loading, error, flights, pagination } = useAppSelector((state) => state.flight);
   const role = getRole();
+  const router = useRouter();
+
+  const getAndSetFlight = useCallback(async () => {
+    const params: any = {
+      page: currentPage,
+      search: searchQuery || undefined,
+      status: status || undefined,
+      airline: airline || undefined,
+      flightType: flightType || undefined,
+      limit,
+    };
+    await dispatch(getFlights(params));
+  }, [currentPage, searchQuery, status, airline, flightType, limit, dispatch]);
+  
+  // WebSocket setup to use the latest getAndSetFlight callback
   useEffect(() => {
     const socket = new WebSocket('ws://localhost:8080');
-
+  
     socket.onmessage = (event) => {
       const message = JSON.parse(event.data);
-      getAndSetFlight();
+      getAndSetFlight();  // Calls with current filter values
     };
-
+  
     return () => {
       socket.close();
     };
-  }, []);
-  useEffect(() => {
-    getAndSetFlight();
-  }, [currentPage, searchQuery, limit, status, airline, flightType]);
-  const router = useRouter();
-  const getAndSetFlight = async () => {
-    
-    const params: any = {};
-    if (currentPage) params.page = currentPage;
-    if (searchQuery) params.search = searchQuery;
-    if (status) params.status = status;
-    if (airline) params.airline = airline;
-    if (flightType) params.flightType = flightType;
-    if (limit) params.limit = limit;
-    await dispatch(getFlights(params));
-  };
+  }, [getAndSetFlight]);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.toLowerCase();
