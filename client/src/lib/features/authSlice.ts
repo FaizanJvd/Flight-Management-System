@@ -20,7 +20,7 @@ export const loginUser = createAsyncThunk<
 >("auth/login", async (credentials, thunkAPI) => {
   try {
     const response = await apiClient.post<LoginResponse>(
-      "/auth/admin/login",
+      "/users/login",
       credentials,
     );
     return response.data;
