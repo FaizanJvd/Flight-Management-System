@@ -5,12 +5,17 @@ const flightRoutes = require('./routes/flightRoutes');
 const userRoutes = require('./routes/userRoutes');
 const { kafkaClient } = require("./kafka/kafka-init");
 const {init} = require("./kafka/producer");
-
+const cors = require('cors')
 dotenv.config();
 
 const app = express();
 
 app.use(express.json());
+var corsOptions = {
+  origin: '*',
+  credentials:  true
+}
+app.use(cors(corsOptions))
 connectToMongo();
 
 init();

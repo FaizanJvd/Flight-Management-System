@@ -21,10 +21,9 @@ function generateRandomFlightData() {
     scheduledDepartureTime: faker.date.future(), // Scheduled time in the future
     status: faker.helpers.arrayElement(['Delayed', 'Cancelled', 'In-flight', 'Scheduled/En Route']), // Corrected usage
     flightType: faker.helpers.arrayElement(['Commercial', 'Military', 'Private']),  // Corrected usage
-    airline: faker.company.name()  // Corrected method for company name
+    airline: faker.helpers.arrayElement(["PIA","Emirates","Qatar Airlines","Air India"]), // Corrected usage
   };
 }
-
 // Seeder function to insert bulk data
 async function seedDatabase() {
   try {
