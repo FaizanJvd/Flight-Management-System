@@ -2,6 +2,9 @@
 
 This project uses Docker to set up required services and runs a Node.js server for application logic. Please follow the steps below to get everything up and running.
 
+## Architecture Diagram Image 
+- **Architecture Flow**: [Architecture](https://drive.google.com/file/d/1orQH4xSpnGfwUvYakFgXJ0uKCjXxJukQ/view?usp=sharing)
+
 ## Prerequisites
 
 Ensure you have the following installed:
