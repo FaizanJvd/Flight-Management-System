@@ -12,7 +12,6 @@ import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { getFlights } from "@/lib/features/flightSlice";
 import { Flight } from "@/_utils/types";
 
-
 const statusOptions = ['Delayed', 'Cancelled', 'In-flight', 'Scheduled/En Route', "All"];
 const airlineOptions = ["PIA","Emirates","Qatar Airlines","Air India", "All"];
 const flightTypeOptions = ["Private", "Commercial", "Military", "All"];
@@ -65,6 +64,7 @@ const FlightTable = () => {
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.toLowerCase();
     setSearchQuery(value);
+    setCurrentPage(1);
   };
 
   const handleFilter = (type: string, value: string) => {
