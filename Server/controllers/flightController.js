@@ -11,9 +11,11 @@ const getFlightsController = async (req, res) => {
     res.status(200).json({
       success: true, data: {
         flights: result.flights,
-        totalFlights: result.totalFlights,
-        totalPages: result.totalPages,
-        currentPage: result.currentPage
+        pagination: {
+          totalFlights: result.totalFlights,
+          totalPages: result.totalPages,
+          currentPage: result.currentPage
+        }
       }
     });
   } catch (error) {
@@ -35,7 +37,7 @@ const updateFlightStatusController = async (req, res) => {
       return res.status(404).json({ success: true, message: 'Flight not found' });
     }
 
-    res.status(200).json({ success: true, data: updatedFlight });
+    res.status(200).json({ success: true, message: "flight updated successfully" });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }

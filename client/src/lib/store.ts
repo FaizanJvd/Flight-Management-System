@@ -1,9 +1,11 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 
 import authReducer from "./features/authSlice";
+import flightReducer from "./features/authSlice";
 
 const rootReducer = combineReducers({
   auth: authReducer,
+  flight: flightReducer
 });
 
 export const makeStore = () => {
