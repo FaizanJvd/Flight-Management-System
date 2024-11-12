@@ -15,12 +15,12 @@ const loginUserController = async (req, res) => {
     const { username, password } = req.body;
     const token = await loginUser(username, password);
     if (token) {
-      res.json({ token });
+      res.json({success:true, token });
     } else {
-      res.status(401).json({ message: 'Invalid credentials' });
+      res.status(401).json({ success:false, message: 'Invalid credentials' });
     }
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ success:false, message: error.message });
   }
 };
 
