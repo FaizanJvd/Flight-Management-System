@@ -25,12 +25,24 @@ const FlightTable = () => {
   const dispatch = useAppDispatch();
   const { loading, error, flights, pagination } = useAppSelector((state) => state.flight);
   const role = getRole();
-  
+  useEffect(() => {
+    const socket = new WebSocket('ws://localhost:8080');
+
+    socket.onmessage = (event) => {
+      const message = JSON.parse(event.data);
+      getAndSetFlight();
+    };
+
+    return () => {
+      socket.close();
+    };
+  }, []);
   useEffect(() => {
     getAndSetFlight();
   }, [currentPage, searchQuery, limit, status, airline, flightType]);
   const router = useRouter();
   const getAndSetFlight = async () => {
+    
     const params: any = {};
     if (currentPage) params.page = currentPage;
     if (searchQuery) params.search = searchQuery;
