@@ -7,13 +7,13 @@ import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectItem, SelectTrigger, SelectContent } from "@/components/ui/select";
-import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogFooter, DialogTrigger } from "@/components/ui/dialog";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { getFlights } from "@/lib/features/flightSlice";
 import { Flight } from "@/_utils/types";
+import UpdateFlightStatus from "@/components/UpdateFlightStatus";
 
 const statusOptions = ['Delayed', 'Cancelled', 'In-flight', 'Scheduled/En Route', "All"];
-const airlineOptions = ["PIA","Emirates","Qatar Airlines","Air India", "All"];
+const airlineOptions = ["PIA", "Emirates", "Qatar Airlines", "Air India", "All"];
 const flightTypeOptions = ["Private", "Commercial", "Military", "All"];
 
 const updateFlightStatusSchema = z.object({
@@ -31,7 +31,7 @@ const FlightTable = () => {
   const [flightType, setFlightType] = useState("");
   const dispatch = useAppDispatch();
   const { loading, error, flights, pagination } = useAppSelector((state) => state.flight);
-  
+
   useEffect(() => {
     getAndSetFlight();
   }, [currentPage, searchQuery, limit, status, airline, flightType]);
@@ -109,7 +109,22 @@ const FlightTable = () => {
     setLimit(Number(e.target.value));
     setCurrentPage(1); // Reset to first page when limit changes
   };
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const openModal = (flight: Flight) => {
+    setSelectedFlight(flight);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedFlight(null);
+  };
+
+  const updateFlightStatus = (flightNumber: string, newStatus: string) => {
+    console.log(`Updated flight ${flightNumber} to status: ${newStatus}`);
+    // Replace this with API call or state update
+  };
   return (
     <div className="p-6 space-y-4">
       {/* Search bar */}
@@ -180,45 +195,25 @@ const FlightTable = () => {
               <td>{flight.airline}</td>
               <td>{flight.flightType}</td>
               <td>
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button onClick={() => setSelectedFlight(flight)}>Update Status</Button>
-                  </DialogTrigger>
-
-                  <DialogContent>
-                    <DialogTitle>Update Flight Status</DialogTitle>
-                    <DialogDescription>Select the new status for {flight.flightNumber}</DialogDescription>
-
-                    <form
-                      onSubmit={form.handleSubmit((data) => {
-                        handleUpdateStatus(data);
-                      })}
-                    >
-                      <div>
-                        <label>Status</label>
-                        <select {...form.register("status")}>
-                          {statusOptions.map((status) => (
-                            <option key={status} value={status}>
-                              {status}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-
-                      <DialogFooter>
-                        <Button type="submit" disabled={loading}>
-                          {loading ? <p>Loading...</p> : "Update Status"}
-                        </Button>
-                      </DialogFooter>
-                    </form>
-                  </DialogContent>
-                </Dialog>
+                <Button
+                  onClick={() => openModal(flight)}
+                >
+                  Update Status
+                </Button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-
+      {/* Render Modal */}
+      {selectedFlight && (
+        <UpdateFlightStatus
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          flight={selectedFlight}
+          onUpdateStatus={updateFlightStatus}
+        />
+      )}
       {/* Pagination */}
       <div className="mt-4 flex justify-between items-center">
         <div>
