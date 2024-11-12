@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { getFlights } from "@/lib/features/flightSlice";
 import { Flight } from "@/_utils/types";
 import UpdateFlightStatus from "@/components/UpdateFlightStatus";
+import { getRole } from "@/_utils/helpers/auth";
 
 const statusOptions = ['Delayed', 'Cancelled', 'In-flight', 'Scheduled/En Route', "All"];
 const airlineOptions = ["PIA", "Emirates", "Qatar Airlines", "Air India", "All"];
@@ -23,7 +24,7 @@ const FlightTable = () => {
   const [flightType, setFlightType] = useState("");
   const dispatch = useAppDispatch();
   const { loading, error, flights, pagination } = useAppSelector((state) => state.flight);
-
+  const role = getRole();
   useEffect(() => {
     getAndSetFlight();
   }, [currentPage, searchQuery, limit, status, airline, flightType]);
@@ -171,7 +172,7 @@ const FlightTable = () => {
               <th className="p-4">Status</th>
               <th className="p-4">Airline</th>
               <th className="p-4">Flight Type</th>
-              <th className="p-4">Actions</th>
+              {role == "admin" && <th className="p-4">Actions</th>}
             </tr>
           </thead>
           <tbody>
@@ -186,11 +187,11 @@ const FlightTable = () => {
                 <td className="p-4">{flight.status}</td>
                 <td className="p-4">{flight.airline}</td>
                 <td className="p-4">{flight.flightType}</td>
-                <td className="p-4">
+                {role == "admin" && <td className="p-4">
                   <Button onClick={() => openModal(flight)} className="bg-blue-600 text-white py-1 px-3 rounded-md hover:bg-blue-700 transition">
                     Update Status
                   </Button>
-                </td>
+                </td>}
               </tr>
             ))}
           </tbody>
