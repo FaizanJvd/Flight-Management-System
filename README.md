@@ -1,24 +1,67 @@
-# Flight-Management-System
-Flight management system dashboard for handling 400 daily commercial, military, and private aircraft. The dashboard should display real-time flight information.
+# Project Setup and Run Guide
 
-# Create mount folders for MongoDB
-mkdir -p ./mongo-data ./mongo-config
+This project uses Docker to set up required services and runs a Node.js server for application logic. Please follow the steps below to get everything up and running.
 
-# Set permissions for MongoDB folders
-# Ensure the `999` user, which is the default MongoDB user in the official image, has access
-sudo chown -R 999:999 ./mongo-data ./mongo-config
-sudo chmod -R 755 ./mongo-data ./mongo-config
+## Prerequisites
 
-# Create mount folder for Zookeeper
-mkdir -p ./zookeeper-data
+Ensure you have the following installed:
 
-# Set permissions for Zookeeper folders
-# Zookeeper runs as root user by default, so no additional user permissions are needed
-sudo chmod -R 755 ./zookeeper-data
+- **Docker**: [Install Docker](https://docs.docker.com/get-docker/)
+- **Node.js**: [Install Node.js](https://nodejs.org/)
 
-# Create mount folder for Kafka
-mkdir -p ./kafka-data
+## Getting Started
 
-# Set permissions for Kafka folders
-# Kafka usually runs as `root` or `appuser`, so 755 permissions are typically sufficient
-sudo chmod -R 755 ./kafka-data
+### 1. Clone the Repository
+
+```bash
+git clone git@github.com:FaizanJvd/Flight-Management-System.git
+```
+
+## 2. Add Envs
+
+ #### 1. In Devops, make file .env, and get enviroments variables from sample.env
+ #### 2. In Server, make file .env, and get enviroments variables from sample.env
+ ####  3. In Client, make file .env, and get enviroments variables from sample.env
+
+## 3. Start Devops First
+
+```bash
+ cd devops 
+```
+```bash
+ docker compose up -d 
+```
+
+
+## 4. Setup & Run Server
+```bash
+ cd server 
+```
+```bash
+ npm install
+```
+```bash
+ npm run serve 
+```
+
+## 5. Setup & Run Socket
+```bash
+ cd socket 
+```
+```bash
+ npm install
+```
+```bash
+ node server.js 
+```
+
+## 6. Setup & Run Client
+```bash
+ cd client 
+```
+```bash
+ npm install
+```
+```bash
+ npm run dev 
+```

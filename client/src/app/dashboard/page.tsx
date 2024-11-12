@@ -25,12 +25,24 @@ const FlightTable = () => {
   const dispatch = useAppDispatch();
   const { loading, error, flights, pagination } = useAppSelector((state) => state.flight);
   const role = getRole();
-  
+  useEffect(() => {
+    const socket = new WebSocket('ws://localhost:8080');
+
+    socket.onmessage = (event) => {
+      const message = JSON.parse(event.data);
+      getAndSetFlight();
+    };
+
+    return () => {
+      socket.close();
+    };
+  }, []);
   useEffect(() => {
     getAndSetFlight();
   }, [currentPage, searchQuery, limit, status, airline, flightType]);
   const router = useRouter();
   const getAndSetFlight = async () => {
+    
     const params: any = {};
     if (currentPage) params.page = currentPage;
     if (searchQuery) params.search = searchQuery;
@@ -210,11 +222,11 @@ const logout = () => {
       <div className="flex items-center justify-between mt-4">
         <span className="text-gray-600">Total Flights: {pagination.totalFlights}</span>
         <div className="flex items-center space-x-2">
-          <Button onClick={handlePreviousPage} disabled={currentPage <= 1} className="p-2 bg-gray-200 rounded-md">
+          <Button onClick={handlePreviousPage} disabled={currentPage <= 1} className="p-2 bg-black rounded-md">
             Previous
           </Button>
           <span>Page {currentPage} of {pagination.totalPages}</span>
-          <Button onClick={handleNextPage} disabled={currentPage >= pagination.totalPages} className="p-2 bg-gray-200 rounded-md">
+          <Button onClick={handleNextPage} disabled={currentPage >= pagination.totalPages} className="p-2 bg-black rounded-md">
             Next
           </Button>
         </div>

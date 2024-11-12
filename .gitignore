@@ -1,9 +1,10 @@
-/Devops/kafka-data
-/Devops/mongo-config
-/Devops/mongo-data
-/Devops/zookeeper-data
-/Devops/valkey/valkey-data
-/Devops/.env
+/devops/kafka-data
+/devops/mongo-config
+/devops/mongo-data
+/devops/zookeeper-data
+/devops/valkey/valkey-data
+/devops/.env
 
-/Server/node_modules
-/Server/.env
+/server/node_modules
+/server/.env
+/socket/node_modules

@@ -70,10 +70,10 @@ services:
     ports:
       - "9092:9092"
       - "9094:9094"
-    volumes:
-      - ./kafka-data:/var/lib/kafka/data
-    user: "root"
-    command: /bin/bash -c "chown -R 1000:1000 /var/lib/kafka/data && /etc/confluent/docker/run"
+    # volumes:
+    #   - ./kafka-data:/var/lib/kafka/data
+    # user: "root"
+    # command: /bin/bash -c "chown -R 1000:1000 /var/lib/kafka/data && /etc/confluent/docker/run"
 
 volumes:
   mongo-data:
