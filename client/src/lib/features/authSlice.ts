@@ -2,6 +2,8 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
   getAccessToken,
+  getRole,
+  setRole,
   setTokens,
 } from "@/_utils/helpers/auth";
 import {
@@ -38,9 +40,11 @@ export const loginUser = createAsyncThunk<
 
 // set access token and refresh token in store initially
 const accessToken = getAccessToken();
+const role = getRole();
 
 const initialState: AuthState = {
   access_token: accessToken ? accessToken : "",
+  role: role ? role : "",
   loading: false,
   error: null,
 } satisfies AuthState as AuthState;
@@ -63,8 +67,9 @@ const authSlice = createSlice({
         loginUser.fulfilled,
         (state, action: PayloadAction<LoginResponse>) => {
           state.loading = false;
-          state.access_token = action.payload.token || "";
-          setTokens(action.payload?.token || "");
+          state.access_token = action.payload.data.token || "";
+          setTokens(action.payload?.data.token || "");
+          setRole(action.payload?.data.role || "");
         },
       )
       .addCase(loginUser.rejected, (state, action) => {

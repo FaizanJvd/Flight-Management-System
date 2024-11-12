@@ -25,6 +25,21 @@ export const removeTokens = () => {
   removeAccessToken();
 };
 
+export const getRole = () => {
+  return isLocalStorageAvailable() ? localStorage.getItem("role") : null;
+};
+
+export const setRole = (token: string) => {
+  if (isLocalStorageAvailable()) {
+    localStorage.setItem("role", token);
+  }
+};
+
+export const removeRole = () => {
+  if (isLocalStorageAvailable()) {
+    localStorage.removeItem("role");
+  }
+};
 export const redirectToLogin = () => {
   if (isLocalStorageAvailable()) {
     window.location.replace("/signin");

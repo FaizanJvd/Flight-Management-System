@@ -8,13 +8,17 @@ export interface LoginPayload {
   password: string;
 }
 export interface LoginResponse {
-  success: boolean
-  token?: string;
+  success: boolean;
+  data: {
+    role: string;
+    token?: string;
+  };
   message?: string;
 }
 
 export interface AuthState {
   access_token: string;
+  role:string;
   loading: boolean;
   error: string | null | undefined;
 }

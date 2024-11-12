@@ -20,7 +20,7 @@ const registerUser = async (username, password, role) => {
   try {
     await create_user(user);
   }
-  catch(err) {
+  catch (err) {
     console.warn(err);
   }
   return user;
@@ -40,7 +40,7 @@ const loginUser = async (username, password) => {
   const token = jwt.sign({ id: user._id }, config.jwt.secret, {
     expiresIn: '1h',
   });
-  return token;
+  return { role: user.role, token };
 };
 
 const getUserById = async (id) => {
