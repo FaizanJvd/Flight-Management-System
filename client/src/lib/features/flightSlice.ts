@@ -44,7 +44,7 @@ export const updateFlight = createAsyncThunk<
     try {
         const response = await apiClient.put<FlightUpdateResponse>("/flights/update", data, {
             headers: {
-                "Content-Type": "multipart/form-data",
+                "Content-Type": "application/json", // Corrected content type
             },
         });
         return response.data;
@@ -53,10 +53,11 @@ export const updateFlight = createAsyncThunk<
             error.response?.data?.message ||
             error.response?.data ||
             error.message ||
-            "Failed to update profile",
+            "Failed to update flight"
         );
     }
 });
+
 
 const initialState: FlightState = {
     flights: [],
