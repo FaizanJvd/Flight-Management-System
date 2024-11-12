@@ -17,13 +17,13 @@ Ensure you have the following installed:
 git clone git@github.com:FaizanJvd/Flight-Management-System.git
 ```
 
-## Add Envs
+## 2. Add Envs
 
  #### 1. In Devops, make file .env, and get enviroments variables from sample.env
  #### 2. In Server, make file .env, and get enviroments variables from sample.env
  ####  3. In Client, make file .env, and get enviroments variables from sample.env
 
-## Start Devops First
+## 3. Start Devops First
 
 ```bash
  cd devops 
@@ -31,7 +31,9 @@ git clone git@github.com:FaizanJvd/Flight-Management-System.git
 ```bash
  docker compose up -d 
 ```
-## Setup Server
+
+
+## 4. Setup & Run Server
 ```bash
  cd server 
 ```
@@ -41,25 +43,8 @@ git clone git@github.com:FaizanJvd/Flight-Management-System.git
 ```bash
  npm run serve 
 ```
-## Start Devops First
 
-```bash
- cd devops 
-```
-```bash
- docker compose up -d 
-```
-## Setup Server
-```bash
- cd server 
-```
-```bash
- npm install
-```
-```bash
- npm run serve 
-```
-## Setup Socket
+## 5. Setup & Run Socket
 ```bash
  cd socket 
 ```
@@ -70,7 +55,7 @@ git clone git@github.com:FaizanJvd/Flight-Management-System.git
  node server.js 
 ```
 
-## Setup Clinet
+## 6. Setup & Run Client
 ```bash
  cd client 
 ```
