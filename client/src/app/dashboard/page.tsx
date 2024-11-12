@@ -1,8 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,10 +14,6 @@ const statusOptions = ['Delayed', 'Cancelled', 'In-flight', 'Scheduled/En Route'
 const airlineOptions = ["PIA", "Emirates", "Qatar Airlines", "Air India", "All"];
 const flightTypeOptions = ["Private", "Commercial", "Military", "All"];
 
-const updateFlightStatusSchema = z.object({
-  flightNumber: z.string().min(1),
-  status: z.enum(["Delayed", "On Time", "Cancelled"]),
-});
 
 const FlightTable = () => {
   const [selectedFlight, setSelectedFlight] = useState<Flight | null>(null);
@@ -43,24 +37,11 @@ const FlightTable = () => {
     if (status) params.status = status;
     if (airline) params.airline = airline;
     if (flightType) params.flightType = flightType;
-    if (limit) params.limit = limit;  // Passing the limit
+    if (limit) params.limit = limit;
     await dispatch(getFlights(params));
   };
 
-  // Form for updating flight status
-  const form = useForm({
-    resolver: zodResolver(updateFlightStatusSchema),
-    defaultValues: {
-      flightNumber: selectedFlight?.flightNumber || "",
-      status: selectedFlight?.status || "On Time",
-    },
-  });
 
-  const handleUpdateStatus = async (data: { flightNumber: string; status: string }) => {
-    // Implement the status update logic here
-  };
-
-  // Handle filters (search, status, airline, flight type)
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.toLowerCase();
     setSearchQuery(value);
@@ -69,30 +50,16 @@ const FlightTable = () => {
 
   const handleFilter = (type: string, value: string) => {
     if (type == "status") {
-      if (value == "All") {
-        setStatus("");
-      } else {
-        setStatus(value);
-      }
+      setStatus(value === "All" ? "" : value);
     }
     if (type == "airline") {
-      if (value == "All") {
-        setAirline("");
-      } else {
-        setAirline(value);
-      }
+      setAirline(value === "All" ? "" : value);
     }
-
     if (type == "flightType") {
-      if (value == "All") {
-        setFlightType("");
-      } else {
-        setFlightType(value);
-      }
+      setFlightType(value === "All" ? "" : value);
     }
   };
 
-  // Pagination functions
   const handleNextPage = () => {
     if (pagination.currentPage < pagination.totalPages) {
       setCurrentPage(currentPage + 1);
@@ -107,7 +74,7 @@ const FlightTable = () => {
 
   const handleLimitChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setLimit(Number(e.target.value));
-    setCurrentPage(1); // Reset to first page when limit changes
+    setCurrentPage(1);
   };
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -121,19 +88,21 @@ const FlightTable = () => {
     setSelectedFlight(null);
   };
 
-  const updateFlightStatus = (flightNumber: string, newStatus: string) => {
-    console.log(`Updated flight ${flightNumber} to status: ${newStatus}`);
-    // Replace this with API call or state update
-  };
   return (
-    <div className="p-6 space-y-4">
+    <div className="p-8 space-y-6 bg-gray-100 min-h-screen">
+      <h1 className="text-3xl font-bold text-gray-800 mb-4">Flight Management System</h1>
+
       {/* Search bar */}
-      <Input placeholder="Search Flights" onChange={handleSearch} />
+      <Input
+        placeholder="Search Flights"
+        onChange={handleSearch}
+        className="w-full max-w-md p-3 bg-white rounded-md shadow-md"
+      />
 
       {/* Filter Dropdowns */}
-      <div className="flex space-x-4">
+      <div className="flex flex-wrap gap-4">
         <Select onValueChange={(value: any) => handleFilter("status", value)}>
-          <SelectTrigger>
+          <SelectTrigger className="p-2 bg-white rounded-md shadow-md w-48">
             <span>Status</span>
           </SelectTrigger>
           <SelectContent>
@@ -146,7 +115,7 @@ const FlightTable = () => {
         </Select>
 
         <Select onValueChange={(value: any) => handleFilter("airline", value)}>
-          <SelectTrigger>
+          <SelectTrigger className="p-2 bg-white rounded-md shadow-md w-48">
             <span>Airline</span>
           </SelectTrigger>
           <SelectContent>
@@ -159,7 +128,7 @@ const FlightTable = () => {
         </Select>
 
         <Select onValueChange={(value: any) => handleFilter("flightType", value)}>
-          <SelectTrigger>
+          <SelectTrigger className="p-2 bg-white rounded-md shadow-md w-48">
             <span>Flight Type</span>
           </SelectTrigger>
           <SelectContent>
@@ -173,31 +142,32 @@ const FlightTable = () => {
       </div>
 
       {/* Flight Table */}
-      <table className="min-w-full border-collapse table-auto">
+      <table className="w-full bg-white rounded-md shadow-md border-collapse">
         <thead>
-          <tr>
-            <th>Flight Number</th>
-            <th>Origin</th>
-            <th>Destination</th>
-            <th>Status</th>
-            <th>Airline</th>
-            <th>Flight Type</th>
-            <th>Actions</th>
+          <tr className="bg-gray-200 text-gray-600 text-left">
+            <th className="p-4">Flight Number</th>
+            <th className="p-4">Origin</th>
+            <th className="p-4">Destination</th>
+            <th className="p-4">Status</th>
+            <th className="p-4">Airline</th>
+            <th className="p-4">Flight Type</th>
+            <th className="p-4">Actions</th>
           </tr>
         </thead>
         <tbody>
           {flights.map((flight) => (
-            <tr key={flight._id}>
-              <td>{flight.flightNumber}</td>
-              <td>{flight.origin}</td>
-              <td>{flight.destination}</td>
-              <td>{flight.status}</td>
-              <td>{flight.airline}</td>
-              <td>{flight.flightType}</td>
-              <td>
-                <Button
-                  onClick={() => openModal(flight)}
-                >
+            <tr
+              key={flight._id}
+              className="border-b border-gray-200 hover:bg-gray-100 transition duration-150"
+            >
+              <td className="p-4">{flight.flightNumber}</td>
+              <td className="p-4">{flight.origin}</td>
+              <td className="p-4">{flight.destination}</td>
+              <td className="p-4">{flight.status}</td>
+              <td className="p-4">{flight.airline}</td>
+              <td className="p-4">{flight.flightType}</td>
+              <td className="p-4">
+                <Button onClick={() => openModal(flight)} className="bg-blue-600 text-white py-1 px-3 rounded-md hover:bg-blue-700 transition">
                   Update Status
                 </Button>
               </td>
@@ -205,42 +175,37 @@ const FlightTable = () => {
           ))}
         </tbody>
       </table>
-      {/* Render Modal */}
+
+      {/* Pagination */}
+      <div className="flex items-center justify-between mt-4">
+        <span className="text-gray-600">Total Flights: {pagination.totalFlights}</span>
+        <div className="flex items-center space-x-2">
+          <Button onClick={handlePreviousPage} disabled={currentPage <= 1} className="p-2 bg-gray-200 rounded-md">
+            Previous
+          </Button>
+          <span>Page {currentPage} of {pagination.totalPages}</span>
+          <Button onClick={handleNextPage} disabled={currentPage >= pagination.totalPages} className="p-2 bg-gray-200 rounded-md">
+            Next
+          </Button>
+        </div>
+        <select onChange={handleLimitChange} value={limit} className="p-2 bg-white border border-gray-300 rounded-md shadow-sm">
+          <option value={10}>10</option>
+          <option value={25}>25</option>
+          <option value={50}>50</option>
+          <option value={100}>100</option>
+        </select>
+      </div>
+
+      {/* Modal */}
       {selectedFlight && (
         <UpdateFlightStatus
           isOpen={isModalOpen}
           onClose={closeModal}
           flight={selectedFlight}
-          onUpdateStatus={updateFlightStatus}
         />
       )}
-      {/* Pagination */}
-      <div className="mt-4 flex justify-between items-center">
-        <div>
-          <span>Total Flights: {pagination.totalFlights}</span>
-        </div>
-        <div className="flex space-x-2">
-          <Button onClick={handlePreviousPage} disabled={currentPage <= 1}>
-            Previous
-          </Button>
-          <span>Page {currentPage} of {pagination.totalPages}</span>
-          <Button onClick={handleNextPage} disabled={currentPage >= pagination.totalPages}>
-            Next
-          </Button>
-        </div>
-
-        {/* Limit selector */}
-        <div>
-          <select onChange={handleLimitChange} value={limit} className="p-2">
-            <option value={10}>10</option>
-            <option value={25}>25</option>
-            <option value={50}>50</option>
-            <option value={100}>100</option>
-          </select>
-        </div>
-      </div>
     </div>
   );
 };
 
-export default FlightTable;
+export default FlightTable;      

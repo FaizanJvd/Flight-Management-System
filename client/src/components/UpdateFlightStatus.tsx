@@ -5,7 +5,6 @@ interface UpdateFlightStatusProps {
   isOpen: boolean;
   flight: Flight;
   onClose: () => void;
-  onUpdateStatus: (flightNumber: string, newStatus: string) => void;
 }
 
 const statusOptions = ["Delayed", "On Time", "Cancelled", "In-flight", "Scheduled/En Route"];
@@ -14,7 +13,6 @@ const UpdateFlightStatus: React.FC<UpdateFlightStatusProps> = ({
   flight,
   isOpen,
   onClose,
-  onUpdateStatus
 }) => {
   const [selectedStatus, setSelectedStatus] = useState(flight.status);
 
@@ -25,7 +23,8 @@ const UpdateFlightStatus: React.FC<UpdateFlightStatusProps> = ({
   };
 
   const handleUpdateClick = () => {
-    onUpdateStatus(flight.flightNumber, selectedStatus);
+    // onUpdateStatus(flight.flightNumber, selectedStatus);
+    
     onClose();
   };
 
