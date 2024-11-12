@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectItem, SelectTrigger, SelectContent } from "@/components/ui/select";
@@ -13,7 +12,6 @@ import UpdateFlightStatus from "@/components/UpdateFlightStatus";
 const statusOptions = ['Delayed', 'Cancelled', 'In-flight', 'Scheduled/En Route', "All"];
 const airlineOptions = ["PIA", "Emirates", "Qatar Airlines", "Air India", "All"];
 const flightTypeOptions = ["Private", "Commercial", "Military", "All"];
-
 
 const FlightTable = () => {
   const [selectedFlight, setSelectedFlight] = useState<Flight | null>(null);
@@ -40,7 +38,6 @@ const FlightTable = () => {
     if (limit) params.limit = limit;
     await dispatch(getFlights(params));
   };
-
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.toLowerCase();
@@ -76,6 +73,7 @@ const FlightTable = () => {
     setLimit(Number(e.target.value));
     setCurrentPage(1);
   };
+
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = (flight: Flight) => {
@@ -141,40 +139,63 @@ const FlightTable = () => {
         </Select>
       </div>
 
+      {/* Loading State */}
+      {loading && !isModalOpen && (
+        <div className="flex justify-center py-4">
+          <div className="w-8 h-8 border-4 border-t-transparent border-blue-500 border-solid rounded-full animate-spin"></div>
+        </div>
+      )}
+
+      {/* Error State */}
+      {error && (
+        <div className="text-center text-red-600 py-4">
+          <p>{error}</p>
+        </div>
+      )}
+
+      {/* No Data Found */}
+      {!loading && !error && flights.length === 0 && (
+        <div className="text-center text-gray-600 py-4">
+          <p>No Data Found</p>
+        </div>
+      )}
+
       {/* Flight Table */}
-      <table className="w-full bg-white rounded-md shadow-md border-collapse">
-        <thead>
-          <tr className="bg-gray-200 text-gray-600 text-left">
-            <th className="p-4">Flight Number</th>
-            <th className="p-4">Origin</th>
-            <th className="p-4">Destination</th>
-            <th className="p-4">Status</th>
-            <th className="p-4">Airline</th>
-            <th className="p-4">Flight Type</th>
-            <th className="p-4">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {flights.map((flight) => (
-            <tr
-              key={flight._id}
-              className="border-b border-gray-200 hover:bg-gray-100 transition duration-150"
-            >
-              <td className="p-4">{flight.flightNumber}</td>
-              <td className="p-4">{flight.origin}</td>
-              <td className="p-4">{flight.destination}</td>
-              <td className="p-4">{flight.status}</td>
-              <td className="p-4">{flight.airline}</td>
-              <td className="p-4">{flight.flightType}</td>
-              <td className="p-4">
-                <Button onClick={() => openModal(flight)} className="bg-blue-600 text-white py-1 px-3 rounded-md hover:bg-blue-700 transition">
-                  Update Status
-                </Button>
-              </td>
+      {!loading && !error && flights.length > 0 && (
+        <table className="w-full bg-white rounded-md shadow-md border-collapse">
+          <thead>
+            <tr className="bg-gray-200 text-gray-600 text-left">
+              <th className="p-4">Flight Number</th>
+              <th className="p-4">Origin</th>
+              <th className="p-4">Destination</th>
+              <th className="p-4">Status</th>
+              <th className="p-4">Airline</th>
+              <th className="p-4">Flight Type</th>
+              <th className="p-4">Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {flights.map((flight) => (
+              <tr
+                key={flight._id}
+                className="border-b border-gray-200 hover:bg-gray-100 transition duration-150"
+              >
+                <td className="p-4">{flight.flightNumber}</td>
+                <td className="p-4">{flight.origin}</td>
+                <td className="p-4">{flight.destination}</td>
+                <td className="p-4">{flight.status}</td>
+                <td className="p-4">{flight.airline}</td>
+                <td className="p-4">{flight.flightType}</td>
+                <td className="p-4">
+                  <Button onClick={() => openModal(flight)} className="bg-blue-600 text-white py-1 px-3 rounded-md hover:bg-blue-700 transition">
+                    Update Status
+                  </Button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
 
       {/* Pagination */}
       <div className="flex items-center justify-between mt-4">
@@ -208,4 +229,4 @@ const FlightTable = () => {
   );
 };
 
-export default FlightTable;      
+export default FlightTable;
