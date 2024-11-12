@@ -1,7 +1,5 @@
-"use client"
+"use client";
 
-
-// components/FlightTable.tsx
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,7 +14,7 @@ import { Flight } from "@/_utils/types";
 
 
 const statusOptions = ['Delayed', 'Cancelled', 'In-flight', 'Scheduled/En Route', "All"];
-const airlineOptions = ["O'Kon Group", "Airline B", "Airline C", "All"];
+const airlineOptions = ["PIA","Emirates","Qatar Airlines","Air India", "All"];
 const flightTypeOptions = ["Private", "Commercial", "Military", "All"];
 
 const updateFlightStatusSchema = z.object({
@@ -34,6 +32,7 @@ const FlightTable = () => {
   const [flightType, setFlightType] = useState("");
   const dispatch = useAppDispatch();
   const { loading, error, flights, pagination } = useAppSelector((state) => state.flight);
+  
   useEffect(() => {
     getAndSetFlight();
   }, [currentPage, searchQuery, limit, status, airline, flightType]);
@@ -45,8 +44,10 @@ const FlightTable = () => {
     if (status) params.status = status;
     if (airline) params.airline = airline;
     if (flightType) params.flightType = flightType;
+    if (limit) params.limit = limit;  // Passing the limit
     await dispatch(getFlights(params));
   };
+
   // Form for updating flight status
   const form = useForm({
     resolver: zodResolver(updateFlightStatusSchema),
@@ -57,7 +58,7 @@ const FlightTable = () => {
   });
 
   const handleUpdateStatus = async (data: { flightNumber: string; status: string }) => {
-
+    // Implement the status update logic here
   };
 
   // Handle filters (search, status, airline, flight type)
@@ -70,16 +71,14 @@ const FlightTable = () => {
     if (type == "status") {
       if (value == "All") {
         setStatus("");
-      }
-      else {
+      } else {
         setStatus(value);
       }
     }
     if (type == "airline") {
       if (value == "All") {
         setAirline("");
-      }
-      else {
+      } else {
         setAirline(value);
       }
     }
@@ -87,11 +86,28 @@ const FlightTable = () => {
     if (type == "flightType") {
       if (value == "All") {
         setFlightType("");
-      }
-      else {
+      } else {
         setFlightType(value);
       }
     }
+  };
+
+  // Pagination functions
+  const handleNextPage = () => {
+    if (pagination.currentPage < pagination.totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleLimitChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setLimit(Number(e.target.value));
+    setCurrentPage(1); // Reset to first page when limit changes
   };
 
   return (
@@ -203,13 +219,33 @@ const FlightTable = () => {
         </tbody>
       </table>
 
-      {/* Pagination (You can customize it as needed) */}
-      <div className="mt-4">
-        {/* Pagination controls */}
+      {/* Pagination */}
+      <div className="mt-4 flex justify-between items-center">
+        <div>
+          <span>Total Flights: {pagination.totalFlights}</span>
+        </div>
+        <div className="flex space-x-2">
+          <Button onClick={handlePreviousPage} disabled={currentPage <= 1}>
+            Previous
+          </Button>
+          <span>Page {currentPage} of {pagination.totalPages}</span>
+          <Button onClick={handleNextPage} disabled={currentPage >= pagination.totalPages}>
+            Next
+          </Button>
+        </div>
+
+        {/* Limit selector */}
+        <div>
+          <select onChange={handleLimitChange} value={limit} className="p-2">
+            <option value={10}>10</option>
+            <option value={25}>25</option>
+            <option value={50}>50</option>
+            <option value={100}>100</option>
+          </select>
+        </div>
       </div>
     </div>
   );
 };
 
 export default FlightTable;
-
