@@ -2,6 +2,7 @@
 /Devops/mongo-config
 /Devops/mongo-data
 /Devops/zookeeper-data
+/Devops/valkey/valkey-data
 /Devops/.env
 
 /Server/node_modules
