@@ -14,6 +14,10 @@ module.exports = {
     tasks: {
         createFlightInterval:process.env.CREATE_FLIGHT_TASK_INTERVAL || 10000,
         updateFlightInterval:process.env.UPDATE_FLIGHT_TASK_INTERVAL || 20000
-    }
-    
+    },
+    kafka: {
+        clientId: process.env.KAFKA_CLIENT_ID || Date.now(),
+        host: process.env.KAFKA_HOST || "localhost",
+        port: process.env.KAFKA_PORT || 9092
+      }
 };
