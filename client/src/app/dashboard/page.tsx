@@ -222,11 +222,11 @@ const logout = () => {
       <div className="flex items-center justify-between mt-4">
         <span className="text-gray-600">Total Flights: {pagination.totalFlights}</span>
         <div className="flex items-center space-x-2">
-          <Button onClick={handlePreviousPage} disabled={currentPage <= 1} className="p-2 bg-gray-200 rounded-md">
+          <Button onClick={handlePreviousPage} disabled={currentPage <= 1} className="p-2 bg-black rounded-md">
             Previous
           </Button>
           <span>Page {currentPage} of {pagination.totalPages}</span>
-          <Button onClick={handleNextPage} disabled={currentPage >= pagination.totalPages} className="p-2 bg-gray-200 rounded-md">
+          <Button onClick={handleNextPage} disabled={currentPage >= pagination.totalPages} className="p-2 bg-black rounded-md">
             Next
           </Button>
         </div>
